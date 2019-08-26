@@ -1,0 +1,5 @@
+[west-server]
+westserver ansible_ssh_host=52.166.33.35 ansible_ssh_user=ansible
+
+[north-server]
+northserver ansible_ssh_host=13.69.156.75 ansible_ssh_user=ansible

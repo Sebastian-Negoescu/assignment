@@ -1,0 +1,25 @@
+---
+- name: Register MS key, register the product repository, install required dependencies
+  get_url:
+    url: "{{ prerequisites_files.ms_prod }}"
+    dest: /home/ansible/packages-microsoft-prod.deb
+
+- name: Install the package
+  apt: deb="/home/ansible/packages-microsoft-prod.deb"
+  become: yes
+
+- name: Add repo Universe
+  become: yes
+  command: add-apt-repository universe
+  
+- name: Install HTTPS transport
+  become: yes
+  command: apt-get install apt-transport-https
+
+- name: Perform an Update
+  become: yes
+  command: apt-get update
+
+- name: Install ASP.NET Core Runtime 2.2
+  become: yes
+  command: apt-get install aspnetcore-runtime-2.2=2.2.0-1 --yes

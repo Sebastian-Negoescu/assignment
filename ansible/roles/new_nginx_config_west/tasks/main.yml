@@ -1,0 +1,15 @@
+---
+- name: Remove original config
+  become: yes
+  file:
+    path: "{{ nginx_conf_path }}/default"
+
+- name: Change Nginx configuration file
+  become: yes
+  get_url: 
+    url: "{{ prerequisites_files.west_default }}"
+    dest: "{{ nginx_conf_path }}"
+
+- name: Verify new default config format
+  become: yes
+  command: sudo nginx -t

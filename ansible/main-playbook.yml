@@ -1,0 +1,27 @@
+- hosts: all
+  roles: 
+    - role: install_runtime
+      tags: ['Download MS Packages & Install the runtime']
+    - role: get_app
+      tags: ['Get Application into the VMs']
+    - role: install_nginx
+      tags: ['Install Nginx Server on VMs']
+  become: yes
+
+- hosts:
+  - west-server
+  roles:  
+    - role: new_nginx_config_west
+      tags: ['Apply new Nginx configuration']
+    - role: reload_nginx_config
+      tags: ['Reload config & Run App']
+  become: yes
+
+- hosts:
+  - north-server
+  roles:  
+    - role: new_nginx_config_north
+      tags: ['Apply new Nginx configuration']
+    - role: reload_nginx_config
+      tags: ['Reload config & Run App']
+  become: yes

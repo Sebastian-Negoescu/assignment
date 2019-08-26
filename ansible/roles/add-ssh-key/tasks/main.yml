@@ -1,0 +1,11 @@
+---
+- name: Set authorized key for team members
+  authorized_key:
+    user: ansible
+    state: present
+    key: '{{ item }}'
+  with_items:
+    - "ssh-rsa MY_WINDOWS_SSH_KEY s.negoescu@CPX-AGAYHMYJY7R"
+    - "ssh-rsa ALESSANDRO_SSH_KEY"
+    - "etc..."
+  become: yes

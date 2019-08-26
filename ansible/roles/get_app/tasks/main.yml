@@ -1,0 +1,31 @@
+---
+- name: Create output directory for app
+  become: true
+  file:
+    path: /home/ansible/uipath_app/
+    state: directory
+    remote_src: yes
+
+- name: Install unzip
+  become: true
+  apt:
+    name: unzip
+    state: present
+
+- name: Download the ZIP file
+  get_url:
+    url: "{{ prerequisites_files.app_zip }}"
+    dest: /home/ansible/uipath_app/netcoreapp2.2.zip
+    mode: 0777
+  become: yes
+
+- name: Unarchive the ZIP file
+  command: sudo unzip -o /home/ansible/uipath_app/netcoreapp2.2.zip -d /home/ansible/uipath_app
+  become: yes
+
+#- name: Get the application
+#  become: true
+#  unarchive:
+#    src: "{{ prerequisites_files.app_zip }}"
+#    dest: /home/ansible/uipath_app/
+#    remote_src: yes

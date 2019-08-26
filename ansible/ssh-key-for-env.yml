@@ -1,0 +1,4 @@
+- hosts: all
+  roles: 
+    - role: add-ssh-key
+      tags: ['Add team members SSH keys']

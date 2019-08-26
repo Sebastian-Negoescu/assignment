@@ -1,0 +1,8 @@
+---
+prerequisites_files:
+  ms_prod: https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb
+  app_zip: https://uipathdevtest.blob.core.windows.net/binaries/netcoreapp2.2.zip
+  west_default: https://raw.githubusercontent.com/Sebastian-Negoescu/assignment/master/ansible/files/west/default
+  north_default: https://raw.githubusercontent.com/Sebastian-Negoescu/assignment/master/ansible/files/north/default
+
+nginx_conf_path: /etc/nginx/sites-available/

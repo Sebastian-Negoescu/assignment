@@ -1,0 +1,83 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {
+        "actiongroup-name": "West Europe Group Alert",
+        "actiongroup-short-name": "primaryDown",
+        "email-receiver": "sebastian.negoescu@gmail.com",
+        "trafficManagerProfile": "kalisebi"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Insights/actionGroups",
+            "apiVersion": "2019-03-01",
+            "name": "[variables('actiongroup-name')]",
+            "location": "Global",
+            "properties": {
+                "groupShortName": "[variables('actiongroup-short-name')]",
+                "enabled": true,
+                "emailReceivers": [
+                    {
+                        "name": "email-action-name",
+                        "emailAddress": "[variables('email-receiver')]",
+                        "useCommonAlertSchema": true
+                    }
+                ],
+                "smsReceivers": [],
+                "webhookReceivers": [],
+                "itsmReceivers": [],
+                "azureAppPushReceivers": [],
+                "automationRunbookReceivers": [],
+                "voiceReceivers": [],
+                "logicAppReceivers": [],
+                "azureFunctionReceivers": []
+            }
+        },
+        {
+            "type": "Microsoft.Insights/metricAlerts",
+            "apiVersion": "2018-03-01",
+            "name": "WE-Endpoint-Down",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.Insights/actionGroups', variables('actiongroup-name'))]"
+            ],
+            "properties": {
+                "description": "alert-rule-description",
+                "severity": 2,
+                "enabled": true,
+                "scopes": [
+                    "[resourceId('Microsoft.Network/trafficManagerProfiles', variables('trafficManagerProfile'))]"
+                ],
+                "evaluationFrequency": "PT1M",
+                "windowSize": "PT1M",
+                "criteria": {
+                    "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria",
+                    "allOf": [
+                        {
+                            "name":"ProbeAgentCurrentEndpointStateByProfileResourceId",
+                            "metricName": "ProbeAgentCurrentEndpointStateByProfileResourceId",
+                            "metricNamespace": "Microsoft.Network/trafficmanagerprofiles",
+                            "threshold": 1,
+                            "operator": "LessThan",
+                            "dimensions": [
+                                {
+                                    "name": "EndpointName",
+                                    "operator": "Include",
+                                    "values": [ "uipath_vm-westeurope-endpoint" ]
+                                }
+                            ],
+                            "timeAggregation": "Maximum"
+                        }
+                    ]
+                },
+                "actions": [
+                    {
+                        "actionGroupId": "[resourceId('Microsoft.Insights/actionGroups', variables('actiongroup-name'))]",
+                        "webHookProperties": {}
+                    }
+                ]
+            }
+        }
+    ]
+}
